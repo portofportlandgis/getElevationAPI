@@ -1,0 +1,33 @@
+service: elevation-api-serverless
+
+plugins:
+  - serverless-plugin-warmup
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: <YOUR-STAGE>
+  profile: <YOUR-PROFILE>
+  region: us-west-2
+  role: arn:aws:iam::<YOUR-IAM-ID>:role/ServerlessFrameworkRole
+  timeout: 10
+  iamRoleStatements:
+  - Effect: 'Allow'
+    Action:
+      - 'lambda:InvokeFunction'
+    Resource: "*"
+  deploymentBucket:
+    name: <YOUR-BUCKET-NAME>
+
+functions:
+  elevationAPI:
+    handler: handler.elevationAPI
+    warmup: true
+    events:
+      - http:
+          method: get
+          path: /
+          private: true
+          cors: true
+          
+
